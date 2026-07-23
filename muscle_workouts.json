@@ -1,0 +1,8 @@
+{
+  "chest": ["Push-Ups", "Incline Push-Ups", "Dips"],
+  "back": ["Pull-Ups", "Superman Hold", "Bent-over Rows"],
+  "legs": ["Squats", "Lunges", "Calf Raises"],
+  "core": ["Plank", "Russian Twists", "Leg Raises"],
+  "shoulders": ["Pike Push-Ups", "Arm Circles", "Lateral Raises"],
+  "full_body": ["Burpees", "Mountain Climbers", "Jumping Jacks"]
+}

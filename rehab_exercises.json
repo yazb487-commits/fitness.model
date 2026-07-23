@@ -1,0 +1,27 @@
+{
+  "lower_back": {
+    "severity_note": "For mild, non-radiating discomfort only",
+    "exercises": ["Cat-Cow Stretch", "Child's Pose", "Pelvic Tilts"],
+    "avoid": ["Heavy deadlifts", "Sit-ups", "Twisting under load"]
+  },
+  "knee": {
+    "severity_note": "For mild soreness only, not sharp or sudden pain",
+    "exercises": ["Straight Leg Raises", "Partial Wall Sits", "Hamstring Stretch"],
+    "avoid": ["Deep squats", "Jumping exercises", "Running on hard surfaces"]
+  },
+  "shoulder": {
+    "severity_note": "For mild stiffness only",
+    "exercises": ["Arm Circles", "Wall Slides", "Doorway Chest Stretch"],
+    "avoid": ["Overhead pressing", "Heavy lateral raises"]
+  },
+  "neck": {
+    "severity_note": "For mild stiffness only",
+    "exercises": ["Neck Tilts", "Chin Tucks", "Shoulder Rolls"],
+    "avoid": ["Neck circles under load", "Sudden jerking movements"]
+  },
+  "ankle": {
+    "severity_note": "For mild stiffness only, not for sprains with swelling",
+    "exercises": ["Ankle Circles", "Calf Stretch", "Toe Raises"],
+    "avoid": ["Jumping", "Running", "Lateral cutting movements"]
+  }
+}

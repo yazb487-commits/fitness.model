@@ -1,0 +1,296 @@
+{
+  "Push-Ups": {
+    "steps": [
+      "Start in a plank position with your hands slightly wider than shoulder-width.",
+      "Keep your body in a straight line from head to heels.",
+      "Lower your body by bending your elbows until your chest is close to the floor.",
+      "Push back up to the starting position."
+    ],
+    "video_id": "IODxDxX7oi4",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/3/33/Civilian_push-up.jpg"
+  },
+  "Squats": {
+    "steps": [
+      "Stand with feet shoulder-width apart, toes pointing slightly outward.",
+      "Send hips back and bend knees to lower down as if sitting in a chair.",
+      "Keep chest upright and back straight.",
+      "Lower until thighs are parallel to the floor, then push back up."
+    ],
+    "video_id": "aclHkVaku9U",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/d/df/Bodyweight_Squats.gif"
+  },
+  "Pull-Ups": {
+    "steps": [
+      "Grip the pull-up bar with hands shoulder-width apart and palms facing away.",
+      "Hang with arms fully extended and core engaged.",
+      "Pull your body up by driving your elbows down toward your ribs until your chin clears the bar.",
+      "Slowly lower back to a dead hang."
+    ],
+    "video_id": "eGo4IYRupO0",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/6/67/Marine_Pull-ups.jpg"
+  },
+  "Incline Push-Ups": {
+    "steps": [
+      "Place your hands on an elevated surface like a bench or step.",
+      "Align your hands slightly wider than shoulder-width, keeping body straight.",
+      "Lower your chest toward the platform, then push back up to lock out."
+    ],
+    "video_id": "Z0bRiVHNj8o",
+    "image_url": ""
+  },
+  "Dips": {
+    "steps": [
+      "Support your body on parallel bars with arms straight.",
+      "Bend your elbows to lower your body until shoulders are below elbows.",
+      "Push up through your palms to return to starting position."
+    ],
+    "video_id": "2z8JmcrW-As",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/5/59/Dipexercise.svg"
+  },
+  "Superman Hold": {
+    "steps": [
+      "Lie face down on the floor with arms extended forward and legs straight.",
+      "Simultaneously lift your arms, chest, and legs off the ground.",
+      "Squeeze your lower back and glutes at the top.",
+      "Hold for the target duration."
+    ],
+    "video_id": "z6PJMT2y8GQ",
+    "image_url": ""
+  },
+  "Bent-over Rows": {
+    "steps": [
+      "Hold weights, bend knees slightly, and hinge at the waist until torso is almost parallel to the floor.",
+      "Let arms hang straight down.",
+      "Pull the weight up towards your lower ribs, squeezing shoulder blades.",
+      "Lower with control."
+    ],
+    "video_id": "6g85eC0r074",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/c/cf/Bent-over-row.gif"
+  },
+  "Lunges": {
+    "steps": [
+      "Stand tall with feet hip-width apart.",
+      "Take a large step forward with one leg and lower hips until both knees are bent at 90-degree angles.",
+      "Keep your front knee directly above your ankle.",
+      "Push off your front foot to return to start."
+    ],
+    "video_id": "QOVaHwlFnkA",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/a/a8/Lunge.gif"
+  },
+  "Calf Raises": {
+    "steps": [
+      "Stand tall with feet hip-width apart.",
+      "Slowly raise your heels off the floor, pressing down on the balls of your feet.",
+      "Pause at the top, then slowly lower your heels back to the ground."
+    ],
+    "video_id": "gwLzBJYoWlU",
+    "image_url": ""
+  },
+  "Plank": {
+    "steps": [
+      "Place forearms on the floor, elbows aligned under shoulders.",
+      "Extend legs behind you, toes tucked, raising your body off the floor.",
+      "Engage your core, glutes, and thighs to form a flat line from head to heels.",
+      "Hold the position while breathing steadily."
+    ],
+    "video_id": "B296mUtAcrQ",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/e/ee/Plank.jpg"
+  },
+  "Russian Twists": {
+    "steps": [
+      "Sit with knees bent, feet flat on the floor.",
+      "Lean back slightly, keeping your spine straight.",
+      "Elevate feet slightly or keep them flat as you twist your torso side to side."
+    ],
+    "video_id": "wkD8rjkodUI",
+    "image_url": ""
+  },
+  "Leg Raises": {
+    "steps": [
+      "Lie flat on your back, arms at your sides.",
+      "Keeping legs straight, slowly lift them until they point to the ceiling.",
+      "Lower legs back down slowly, keeping core engaged and lower back pressed down."
+    ],
+    "video_id": "JB2oyDdUjCo",
+    "image_url": ""
+  },
+  "Pike Push-Ups": {
+    "steps": [
+      "Start in a downward dog position with hips high and back flat.",
+      "Bend your elbows to lower the crown of your head toward the floor.",
+      "Push back up until arms are fully straight."
+    ],
+    "video_id": "sposDXSUB0A",
+    "image_url": ""
+  },
+  "Arm Circles": {
+    "steps": [
+      "Stand tall with arms extended out to your sides parallel to the floor.",
+      "Perform small circular motions with your arms, keeping them straight.",
+      "Reverse directions after the target duration."
+    ],
+    "video_id": "140Oepv50y4",
+    "image_url": ""
+  },
+  "Lateral Raises": {
+    "steps": [
+      "Stand tall with a weight in each hand at your sides.",
+      "Raise arms out to the sides until they are parallel to the floor.",
+      "Lower with control."
+    ],
+    "video_id": "3VcKaXtoudU",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/0/07/Lateral-raise.gif"
+  },
+  "Burpees": {
+    "steps": [
+      "Start in a standing position, squat down, and jump your feet back into a plank.",
+      "Perform a push-up, jump your feet back to your hands.",
+      "Jump up explosively with arms overhead."
+    ],
+    "video_id": "qLBt2g-6gB0",
+    "image_url": ""
+  },
+  "Mountain Climbers": {
+    "steps": [
+      "Start in a plank position.",
+      "Drive one knee forward under your chest, then return to start.",
+      "Alternate legs rapidly in a running motion."
+    ],
+    "video_id": "cnyTQDSE884",
+    "image_url": ""
+  },
+  "Jumping Jacks": {
+    "steps": [
+      "Stand with feet together and arms at your sides.",
+      "Jump feet out wide while swinging arms overhead.",
+      "Jump back to the start position."
+    ],
+    "video_id": "nGaXj3kkmU4",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/a/a4/Jumping_jack.gif"
+  },
+  "Cat-Cow Stretch": {
+    "steps": [
+      "Start on hands and knees.",
+      "Inhale, arch your back, and look up (Cow).",
+      "Exhale, round your spine toward the ceiling, tucking your chin (Cat)."
+    ],
+    "video_id": "KQCOAkHmVXc",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/b/be/Yoga_at_Your_Park_-_Bitilasana.jpg"
+  },
+  "Child's Pose": {
+    "steps": [
+      "Kneel, sit back on your heels, and fold forward.",
+      "Extend arms out in front on the floor and rest your forehead on the ground."
+    ],
+    "video_id": "2K-yZg596tY",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/0/0b/Balasana.JPG"
+  },
+  "Pelvic Tilts": {
+    "steps": [
+      "Lie on your back with knees bent, feet flat.",
+      "Flatten your lower back against the floor by tightening abdominal muscles.",
+      "Hold for 5 seconds, then release."
+    ],
+    "video_id": "8l_E0aFwL3s",
+    "image_url": ""
+  },
+  "Straight Leg Raises": {
+    "steps": [
+      "Lie on back, bend one knee, keep other straight.",
+      "Tighten thigh muscle of straight leg and lift it 12 inches.",
+      "Hold briefly and lower with control."
+    ],
+    "video_id": "uY4rF-03q38",
+    "image_url": ""
+  },
+  "Partial Wall Sits": {
+    "steps": [
+      "Stand with back against a wall, feet 2 feet away.",
+      "Slide down the wall until knees are bent to about 45 degrees.",
+      "Hold for 10-20 seconds, then slide back up."
+    ],
+    "video_id": "y-wV4VFl56M",
+    "image_url": ""
+  },
+  "Hamstring Stretch": {
+    "steps": [
+      "Sit with one leg extended and fold other foot against inner thigh.",
+      "Reach forward towards extended foot, keeping back straight.",
+      "Hold the stretch without bouncing."
+    ],
+    "video_id": "nL0eZleV08M",
+    "image_url": ""
+  },
+  "Wall Slides": {
+    "steps": [
+      "Stand with back and arms pressed flat against a wall.",
+      "Slowly slide arms up overhead, keeping contact with the wall.",
+      "Slide back down to elbow height."
+    ],
+    "video_id": "spS_5qQ10kU",
+    "image_url": ""
+  },
+  "Doorway Chest Stretch": {
+    "steps": [
+      "Stand in a doorway, placing forearms on the door frame.",
+      "Gently step forward until you feel a stretch in your chest.",
+      "Hold for 20-30 seconds."
+    ],
+    "video_id": "3a8XzM_G2S4",
+    "image_url": ""
+  },
+  "Neck Tilts": {
+    "steps": [
+      "Sit or stand tall.",
+      "Slowly tilt ear toward shoulder until a light stretch is felt.",
+      "Hold and switch sides."
+    ],
+    "video_id": "HnCg3rYhNrs",
+    "image_url": ""
+  },
+  "Chin Tucks": {
+    "steps": [
+      "Sit upright, look straight ahead.",
+      "Tuck chin straight back as if making a double chin.",
+      "Hold for 5 seconds and release."
+    ],
+    "video_id": "g1_jK4kSjoc",
+    "image_url": ""
+  },
+  "Shoulder Rolls": {
+    "steps": [
+      "Shrug shoulders up towards ears.",
+      "Roll them back and down in a circular motion.",
+      "Repeat forwards and backwards."
+    ],
+    "video_id": "c5p1p8q16gY",
+    "image_url": ""
+  },
+  "Ankle Circles": {
+    "steps": [
+      "Raise one foot off the floor.",
+      "Slowly rotate the ankle in a circle.",
+      "Repeat in opposite direction and switch feet."
+    ],
+    "video_id": "Hn_fK6kLSub",
+    "image_url": ""
+  },
+  "Calf Stretch": {
+    "steps": [
+      "Stand facing a wall, place hands on it.",
+      "Step one foot back, keeping heel flat and leg straight.",
+      "Lean forward to feel stretch in lower leg."
+    ],
+    "video_id": "MDj8uDmgKro",
+    "image_url": ""
+  },
+  "Toe Raises": {
+    "steps": [
+      "Stand with feet flat on the floor.",
+      "Raise toes upward while keeping heels on the ground.",
+      "Lower back down."
+    ],
+    "video_id": "Zc0cE3_wRco",
+    "image_url": ""
+  }
+}
