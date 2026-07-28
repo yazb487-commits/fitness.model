@@ -5,7 +5,6 @@ import cv2
 import tempfile
 import tf_keras
 import time
-import pandas as pd
 import random
 import json
 import re
@@ -28,8 +27,6 @@ if "start_time" not in st.session_state:
     st.session_state.start_time = time.time()
 if "last_detected_time" not in st.session_state:
     st.session_state.last_detected_time = "--:--:--"
-if "weekly_log" not in st.session_state:
-    st.session_state.weekly_log = {"Mon": 4, "Tue": 7, "Wed": 3, "Thu": 6, "Fri": 12, "Sat": 15, "Sun": 0}
 if "coach_guidance" not in st.session_state:
     st.session_state.coach_guidance = None
 if "last_coach_exercise" not in st.session_state:
@@ -256,6 +253,57 @@ def load_exercise_guide():
         st.error(f"Error loading exercise guide: {e}")
         return {}
 
+def render_exercise_card(ex_name, ex_info):
+    gif_url = (ex_info.get("gif_url") or "").strip()
+    image_url = (ex_info.get("image_url") or "").strip()
+    steps = ex_info.get("steps", [])
+    
+    if gif_url:
+        media_url = gif_url
+        badge_text = "GIF"
+    elif image_url:
+        media_url = image_url
+        badge_text = "IMG"
+    else:
+        media_url = None
+        badge_text = None
+    
+    if media_url:
+        badge_html = f'''<div style="position: absolute; top: 6px; right: 6px; font-size: 9px; padding: 2px 6px; border-radius: 4px; background-color: rgba(0, 0, 0, 0.65); color: #B5FF00; font-weight: 700; letter-spacing: 0.5px; z-index: 10; pointer-events: none;">{badge_text}</div>'''
+        left_box = f'''<div style="position: relative; width: 100%; height: 160px; overflow: hidden; border-radius: 8px;">
+            {badge_html}
+            <img src="{media_url}" alt="{ex_name}" style="width: 100%; height: 160px; object-fit: cover; border-radius: 8px; display: block;" />
+        </div>'''
+    else:
+        left_box = '''<div style="width: 100%; height: 160px; background-color: #3A3F44; border: 2px dashed #4A4F55; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #6B7075; text-align: center; padding: 10px; box-sizing: border-box;">
+            <span style="font-size: 28px; margin-bottom: 4px; filter: grayscale(100%); opacity: 0.6;">🖼️</span>
+            <span style="font-size: 11px; font-weight: 600; color: #6B7075; text-transform: uppercase; letter-spacing: 0.5px;">No preview available</span>
+        </div>'''
+        
+    steps_html = "".join([
+        f'<li style="margin-bottom: 6px; color: #E6E6E6; font-size: 13px; line-height: 1.4;"><span style="color: #B5FF00; font-weight: 700; font-size: 14px; margin-right: 4px;">{i+1}.</span> {step}</li>'
+        for i, step in enumerate(steps)
+    ])
+    
+    if not steps_html:
+        steps_html = '<li style="color: #A0A4A8; font-size: 13px;">Follow standard movement guidelines.</li>'
+        
+    card_html = f'''
+    <div style="max-width: 540px; background-color: #2C2F33; border: 1px solid #4A4F55; border-radius: 10px; padding: 12px; margin-top: 5px; margin-bottom: 10px;">
+        <div style="display: grid; grid-template-columns: 1fr 1.3fr; gap: 10px; align-items: center;">
+            <div style="width: 100%; height: 160px;">
+                {left_box}
+            </div>
+            <div style="height: 160px; max-height: 160px; overflow-y: auto; padding-right: 6px;">
+                <ol style="margin: 0; padding-left: 0; list-style-type: none;">
+                    {steps_html}
+                </ol>
+            </div>
+        </div>
+    </div>
+    '''
+    st.markdown(card_html, unsafe_allow_html=True)
+
 @st.cache_data(show_spinner=False)
 def generate_routine(muscle_group, exercises, api_key):
     try:
@@ -365,6 +413,106 @@ def generate_rehab_guidance(area, exercises, api_key):
     except Exception as e:
         return f"### ⚠️ AI Connection Error\nCould not fetch rehab guidelines. Details: {e}"
 
+@st.cache_data
+def load_protein_sources():
+    try:
+        with open("protein_sources.json", "r") as f:
+            return json.load(f)
+    except Exception as e:
+        st.error(f"Error loading protein sources: {e}")
+        return {"vegetarian": [], "non_vegetarian": []}
+
+@st.cache_data(show_spinner=False)
+def generate_meal_plan(goal, calorie_target, protein_target, diet_pref, protein_sources_context, api_key):
+    try:
+        from langchain_groq import ChatGroq
+        from langchain_core.prompts import PromptTemplate
+        
+        llm = ChatGroq(
+            temperature=0.7, 
+            groq_api_key=api_key, 
+            model_name="llama-3.1-8b-instant"
+        )
+        
+        template = """
+        You are a professional fitness coach and nutritionist.
+        Create a 1-day sample meal plan (breakfast, lunch, dinner, 1-2 snacks) for a user with the following goals and needs:
+        - Goal: {goal}
+        - Daily Calorie Target: ~{calorie_target} kcal
+        - Daily Protein Target: ~{protein_target} g
+        - Diet Preference: {diet_pref}
+
+        Rules:
+        - ONLY include foods suitable for a {diet_pref} diet.
+        - Primary protein sources available to pull from: {protein_sources_context}. You may include reasonable common carbs (rice, oats, bread, sweet potatoes), healthy fats (nuts, olive oil, avocado), and vegetables to round out balanced meals.
+        - Output the meal plan strictly in the following structured format:
+
+        [BREAKFAST]
+        * Item 1 - Serving - Approx Calories & Protein
+        * Item 2 - Serving - Approx Calories & Protein
+
+        [LUNCH]
+        * Item 1 - Serving - Approx Calories & Protein
+        * Item 2 - Serving - Approx Calories & Protein
+
+        [SNACKS]
+        * Item 1 - Serving - Approx Calories & Protein
+        * Item 2 - Serving - Approx Calories & Protein
+
+        [DINNER]
+        * Item 1 - Serving - Approx Calories & Protein
+        * Item 2 - Serving - Approx Calories & Protein
+
+        [SUMMARY]
+        Summary line of total estimated daily calories and protein.
+
+        [DISCLAIMER]
+        This meal plan is a general estimate based on standard nutritional formulas and is not personalized medical or dietary advice. Consult a nutritionist or doctor for specific medical conditions or dietary requirements.
+        """
+        
+        prompt = PromptTemplate(
+            template=template, 
+            input_variables=["goal", "calorie_target", "protein_target", "diet_pref", "protein_sources_context"]
+        )
+        chain = prompt | llm
+        
+        response = chain.invoke({
+            "goal": goal,
+            "calorie_target": calorie_target,
+            "protein_target": protein_target,
+            "diet_pref": diet_pref,
+            "protein_sources_context": protein_sources_context
+        })
+        return response.content
+    except Exception as e:
+        return f"### ⚠️ AI Meal Plan Connection Error\nCould not fetch meal plan from Groq. Details: {e}"
+
+def parse_meal_plan_response(text):
+    breakfast, lunch, snacks, dinner, summary, disclaimer = [], [], [], [], "", ""
+    if not text:
+        return breakfast, lunch, snacks, dinner, summary, disclaimer
+        
+    parts = text.split('[')
+    for part in parts:
+        if part.startswith('BREAKFAST]'):
+            content = part.replace('BREAKFAST]', '').strip()
+            breakfast = [line.strip('* -•') for line in content.split('\n') if line.strip()]
+        elif part.startswith('LUNCH]'):
+            content = part.replace('LUNCH]', '').strip()
+            lunch = [line.strip('* -•') for line in content.split('\n') if line.strip()]
+        elif part.startswith('SNACKS]'):
+            content = part.replace('SNACKS]', '').strip()
+            snacks = [line.strip('* -•') for line in content.split('\n') if line.strip()]
+        elif part.startswith('DINNER]'):
+            content = part.replace('DINNER]', '').strip()
+            dinner = [line.strip('* -•') for line in content.split('\n') if line.strip()]
+        elif part.startswith('SUMMARY]'):
+            summary = part.replace('SUMMARY]', '').strip()
+        elif part.startswith('DISCLAIMER]'):
+            disclaimer = part.replace('DISCLAIMER]', '').strip()
+            
+    return breakfast, lunch, snacks, dinner, summary, disclaimer
+
 # ==========================================
 # 4. GROQ & LANGCHAIN COACH INTEGRATION
 # ==========================================
@@ -387,6 +535,7 @@ def get_exercise_details(exercise_name, api_key):
         Please provide the following details in simple words:
         1. What is this exercise? (Brief Description)
         2. What are its major benefits?
+        - Do not include an introductory sentence before the bullet list. Start the Benefits section directly with the bullet points. Format each research benefit as a single bullet: 'Bold Title: description.'
         3. 3 Key tips for maintaining correct form and avoiding injury.
         """
         
@@ -456,6 +605,10 @@ def draw_svg_gauge(confidence_pct):
 # ==========================================
 # 7. PARSE AI COACH TEXT OUTPUT
 # ==========================================
+def clean_bullet_line(line):
+    cleaned = re.sub(r'^[-*•\d\.]+\s*', '', line).strip()
+    return cleaned
+
 def parse_coach_response(text):
     description = ""
     benefits = []
@@ -468,62 +621,88 @@ def parse_coach_response(text):
     current_section = None
     
     for line in lines:
+        clean_header_lower = re.sub(r'^[\#\*\s\d\.\)]+', '', line).lower().strip()
         lower = line.lower()
         
-        is_desc = "what is" in lower or "description" in lower
-        is_benefits = "benefits" in lower or "benefit" in lower
-        is_tips = "tips" in lower or "coaching" in lower or "correct form" in lower
+        # Section header matching
+        is_desc = "what is" in clean_header_lower or clean_header_lower.startswith("description")
+        is_benefits = "benefit" in clean_header_lower
+        is_tips = "tip" in clean_header_lower or "coaching" in clean_header_lower or ("form" in clean_header_lower and "tips" in clean_header_lower)
         
         if is_desc:
             current_section = "desc"
-            header_match = re.search(r'(what is this exercise\?|description):?\s*(.*)', lower)
-            if header_match and header_match.group(2):
-                description += " " + line[len(line) - len(header_match.group(2)):].strip()
-            continue
-        elif is_benefits:
-            current_section = "benefits"
-            header_match = re.search(r'(benefits|benefit):?\s*(.*)', lower)
-            if header_match and header_match.group(2):
-                clean = line[len(line) - len(header_match.group(2)):].lstrip('*-•1234567890. ').strip()
-                if clean:
-                    benefits.append(clean)
-            continue
-        elif is_tips:
-            current_section = "tips"
-            header_match = re.search(r'(tips|coaching|correct form):?\s*(.*)', lower)
-            if header_match and header_match.group(2):
-                clean = line[len(line) - len(header_match.group(2)):].lstrip('*-•1234567890. ').strip()
-                if clean:
-                    tips.append(clean)
+            if ":" in line:
+                after = line.split(":", 1)[1].strip()
+                after_clean = re.sub(r'\*+', '', after).strip()
+                if after_clean and not after_clean.lower().startswith("(brief") and not after_clean.lower().endswith("?"):
+                    description += " " + after_clean
             continue
             
+        elif is_benefits:
+            current_section = "benefits"
+            if ":" in line:
+                after = line.split(":", 1)[1].strip()
+                after_clean = re.sub(r'\*+', '', after).strip()
+                if after_clean and not after_clean.endswith(":") and "including" not in after_clean.lower() and not after_clean.lower().endswith("?"):
+                    cleaned = clean_bullet_line(after_clean)
+                    if cleaned and len(cleaned) > 2:
+                        benefits.append(cleaned)
+            continue
+            
+        elif is_tips:
+            current_section = "tips"
+            if ":" in line:
+                after = line.split(":", 1)[1].strip()
+                after_clean = re.sub(r'\*+', '', after).strip()
+                if after_clean and not after_clean.endswith(":") and "tips" not in after_clean.lower() and not after_clean.lower().endswith("?"):
+                    cleaned = clean_bullet_line(after_clean)
+                    if cleaned and len(cleaned) > 2:
+                        tips.append(cleaned)
+            continue
+            
+        # Accumulate content per section
         if current_section == "desc":
-            if not line.startswith('#') and not line.startswith('1.') and not line.startswith('2.') and not line.startswith('3.'):
+            if not line.startswith('#') and not re.match(r'^\**\d+\.', line):
                 description += " " + line
+                
         elif current_section == "benefits":
-            clean = line.lstrip('*-•1234567890. ')
-            if clean:
-                benefits.append(clean)
+            # Ignore intro sentences ending in colon or containing "including" if not a bullet item
+            if (line.endswith(':') or "including" in line.lower() or "here are" in line.lower()) and not line.startswith(('-', '*', '•')) and not '**' in line:
+                continue
+            cleaned = clean_bullet_line(line)
+            if cleaned and cleaned not in ["?", "**", "?**"] and len(cleaned) > 2:
+                benefits.append(cleaned)
+                
         elif current_section == "tips":
-            clean = line.lstrip('*-•1234567890. ')
-            if clean:
-                tips.append(clean)
+            if (line.endswith(':') or "here are" in line.lower()) and not line.startswith(('-', '*', '•', '1', '2', '3')) and not '**' in line:
+                continue
+            cleaned = clean_bullet_line(line)
+            if cleaned and cleaned not in ["?", "**", "?**"] and len(cleaned) > 2:
+                tips.append(cleaned)
                 
     description = description.strip()
     
-    # Fallback to paragraph parsing
+    # Fallback for description
     if not description:
-        parts = text.split('\n\n')
-        if len(parts) >= 1:
-            description = parts[0].strip()
-            
-    # Fallback list item extraction
-    if not benefits:
-        list_items = re.findall(r'(?:^|\n)[-*•\d\.]+\s*(.+)', text)
-        if len(list_items) >= 2:
-            benefits = list_items[:3]
-            
-    return description, benefits[:3], tips[:3]
+        parts = [p.strip() for p in text.split('\n\n') if p.strip()]
+        if parts:
+            first_p = parts[0]
+            if not any(k in first_p.lower() for k in ["benefit", "tip", "1.", "2.", "3."]):
+                description = first_p
+
+    def format_bold(item_list):
+        formatted_list = []
+        for item in item_list:
+            fmt = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', item)
+            fmt = re.sub(r'\*\*', '', fmt).strip()
+            if fmt:
+                formatted_list.append(fmt)
+        return formatted_list
+
+    formatted_desc = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', description)
+    formatted_desc = re.sub(r'\*\*', '', formatted_desc).strip()
+
+    return formatted_desc, format_bold(benefits)[:3], format_bold(tips)[:3]
 
 # ==========================================
 # 8. DYNAMIC ENCOURAGEMENT BOX GENERATOR
@@ -552,7 +731,7 @@ except Exception:
 # ==========================================
 # 10. TAB NAVIGATION & LAYOUT (st.tabs)
 # ==========================================
-tracker_tab, finder_tab, rehab_tab = st.tabs(["🔍 Tracker", "🎯 Workout Finder", "🩹 Rehab Guide"])
+tracker_tab, finder_tab, rehab_tab, calc_tab = st.tabs(["🔍 Tracker", "🎯 Workout Finder", "🩹 Rehab Guide", "🔥 Calorie & Protein Calculator"])
 
 with tracker_tab:
     col1, col2, col3 = st.columns([1.1, 1.1, 1.2], gap="large")
@@ -635,10 +814,6 @@ with tracker_tab:
                     st.session_state.frames_analyzed += 1
                     st.session_state.detections_today += 1
                     st.session_state.last_detected_time = time.strftime("%H:%M:%S")
-                    
-                    current_day = time.strftime("%a")
-                    if current_day in st.session_state.weekly_log:
-                        st.session_state.weekly_log[current_day] += 1
                 
                 if st.session_state.detected_exercise:
                     cv2.rectangle(frame, (10, 10), (340, 75), (58, 63, 44), -1) 
@@ -679,10 +854,6 @@ with tracker_tab:
                     st.session_state.frames_analyzed += 1
                     st.session_state.detections_today += 1
                     st.session_state.last_detected_time = time.strftime("%H:%M:%S")
-                    
-                    current_day = time.strftime("%a")
-                    if current_day in st.session_state.weekly_log:
-                        st.session_state.weekly_log[current_day] += 1
                 
                 if st.session_state.detected_exercise:
                     cv2.rectangle(frame, (10, 10), (340, 75), (58, 63, 44), -1) 
@@ -703,10 +874,6 @@ with tracker_tab:
             st.session_state.frames_analyzed += 1
             st.session_state.detections_today += 1
             st.session_state.last_detected_time = time.strftime("%H:%M:%S")
-            
-            current_day = time.strftime("%a")
-            if current_day in st.session_state.weekly_log:
-                st.session_state.weekly_log[current_day] += 1
 
         # Session Stats Row (2x2 metric cards)
         session_duration_sec = int(time.time() - st.session_state.start_time)
@@ -735,14 +902,6 @@ with tracker_tab:
             </div>
         </div>
         """, unsafe_allow_html=True)
-
-        # Weekly Activity Chart
-        st.markdown("<h4 style='margin-top: 25px; color:#A0A4A8 !important; font-size: 14px;'>📅 WEEKLY TELEMETRY LOGS</h4>", unsafe_allow_html=True)
-        df_weekly = pd.DataFrame(
-            list(st.session_state.weekly_log.items()),
-            columns=["Day", "Detections"]
-        ).set_index("Day")
-        st.area_chart(df_weekly, color="#B5FF00")
 
     # ------------------------------------------
     # MIDDLE COLUMN: RESULT CARD
@@ -1029,24 +1188,7 @@ with finder_tab:
                 # 3. "HOW TO PERFORM" EXPANDER
                 with st.expander(f"▶ How to perform: {ex}"):
                     ex_info = guide_dict[ex]
-                    steps = ex_info.get("steps", [])
-                    video_id = ex_info.get("video_id", "")
-                    image_url = ex_info.get("image_url", "")
-                    
-                    if image_url:
-                        img_col, steps_col = st.columns([1, 1.5])
-                        with img_col:
-                            st.image(image_url, caption="Reference Form", use_container_width=True)
-                        with steps_col:
-                            for i, step in enumerate(steps):
-                                st.write(f"**{i+1}.** {step}")
-                    else:
-                        for i, step in enumerate(steps):
-                            st.write(f"**{i+1}.** {step}")
-                            
-                    if video_id:
-                        st.video(f"https://www.youtube.com/watch?v={video_id}")
-                        st.caption("🎥 Watch a full demonstration")
+                    render_exercise_card(ex, ex_info)
                 
                 st.markdown("<div style='margin-bottom: 25px;'></div>", unsafe_allow_html=True)
             
@@ -1136,24 +1278,7 @@ with rehab_tab:
                 # 3. "HOW TO PERFORM" EXPANDER
                 with st.expander(f"▶ How to perform: {ex}"):
                     ex_info = guide_dict[ex]
-                    steps = ex_info.get("steps", [])
-                    video_id = ex_info.get("video_id", "")
-                    image_url = ex_info.get("image_url", "")
-                    
-                    if image_url:
-                        img_col, steps_col = st.columns([1, 1.5])
-                        with img_col:
-                            st.image(image_url, caption="Reference Form", use_container_width=True)
-                        with steps_col:
-                            for i, step in enumerate(steps):
-                                st.write(f"**{i+1}.** {step}")
-                    else:
-                        for i, step in enumerate(steps):
-                            st.write(f"**{i+1}.** {step}")
-                            
-                    if video_id:
-                        st.video(f"https://www.youtube.com/watch?v={video_id}")
-                        st.caption("🎥 Watch a full demonstration")
+                    render_exercise_card(ex, ex_info)
                         
                 st.markdown("<div style='margin-bottom: 25px;'></div>", unsafe_allow_html=True)
                             
@@ -1175,3 +1300,252 @@ with rehab_tab:
                 # Avoid list
                 avoid_items_html = "".join([f"<li style='margin-bottom: 4px; font-size: 13.5px; color: #E6E6E6;'>{item}</li>" for item in avoid_list])
                 st.markdown(f'<div style="background-color: #3A3F44; border-left: 5px solid #FF4D4D; border-top: 1px solid #4A4F55; border-right: 1px solid #4A4F55; border-bottom: 1px solid #4A4F55; padding: 18px; border-radius: 8px;"><span style="font-weight: 700; color: #FF4D4D; font-size: 13px; display: block; margin-bottom: 8px;">⚠️ Avoid These While Recovering</span><ul style="margin: 0; padding-left: 20px; color: #FF4D4D;">{avoid_items_html}</ul></div>', unsafe_allow_html=True)
+
+# ==========================================
+# 11. CALORIE & PROTEIN CALCULATOR TAB
+# ==========================================
+with calc_tab:
+    st.markdown("<h2 style='color: #E6E6E6 !important; margin-bottom: 5px;'>🔥 CALORIE & PROTEIN CALCULATOR</h2>", unsafe_allow_html=True)
+    st.markdown("<p style='color: #A0A4A8; font-size: 15px; margin-bottom: 20px;'>Calculate your BMR, TDEE, goal daily calories, and protein target using the Mifflin-St Jeor equation.</p>", unsafe_allow_html=True)
+
+    # Disclaimer Banner
+    st.markdown("""
+    <div style="background-color: #3A3F44; border-left: 5px solid #FF4D4D; border-top: 1px solid #4A4F55; border-right: 1px solid #4A4F55; border-bottom: 1px solid #4A4F55; padding: 16px; border-radius: 8px; margin-bottom: 25px;">
+        <span style="font-weight: 700; color: #FF4D4D; font-size: 14px; display: block; margin-bottom: 4px;">⚠️ MEDICAL & NUTRITION DISCLAIMER</span>
+        <p style="margin: 0; font-size: 13.5px; color: #E6E6E6;">
+            These calculations and meal plan recommendations are estimates based on standard formulas (Mifflin-St Jeor) and general guidelines. They are not a substitute for professional medical or nutrition advice. Consult a doctor or registered dietitian for specific dietary requirements or health conditions.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # 1. User Input Form
+    st.markdown("<h3 style='color: #E6E6E6 !important; margin-bottom: 15px;'>📋 BIOMETRICS & GOALS</h3>", unsafe_allow_html=True)
+    
+    col_in1, col_in2 = st.columns(2, gap="large")
+
+    with col_in1:
+        st.markdown("<h4 style='color: #B5FF00 !important; font-size: 16px; margin-bottom: 10px;'>1. Personal Details & Units</h4>", unsafe_allow_html=True)
+        age = st.number_input("Age (years)", min_value=15, max_value=80, value=25, step=1, key="calc_age")
+        gender = st.radio("Gender", ["Male", "Female"], horizontal=True, key="calc_gender")
+        unit_toggle = st.radio("Unit System", ["Metric (cm / kg)", "US (ft+in / lbs)"], horizontal=True, key="calc_unit_toggle")
+
+        if unit_toggle == "Metric (cm / kg)":
+            height_cm = st.number_input("Height (cm)", min_value=50.0, max_value=250.0, value=175.0, step=0.5, key="calc_h_cm")
+            weight_kg = st.number_input("Weight (kg)", min_value=20.0, max_value=300.0, value=70.0, step=0.5, key="calc_w_kg")
+        else:
+            col_ft, col_in = st.columns(2)
+            height_ft = col_ft.number_input("Height (feet)", min_value=1, max_value=8, value=5, step=1, key="calc_h_ft")
+            height_in = col_in.number_input("Height (inches)", min_value=0.0, max_value=11.9, value=9.0, step=0.5, key="calc_h_in")
+            height_cm = (height_ft * 12 + height_in) * 2.54
+
+            weight_lbs = st.number_input("Weight (lbs)", min_value=44.0, max_value=660.0, value=154.0, step=1.0, key="calc_w_lbs")
+            weight_kg = weight_lbs / 2.20462
+
+    with col_in2:
+        st.markdown("<h4 style='color: #B5FF00 !important; font-size: 16px; margin-bottom: 10px;'>2. Lifestyle & Objectives</h4>", unsafe_allow_html=True)
+        
+        activity_options = {
+            "Sedentary (little or no exercise)": 1.2,
+            "Light (exercise 1–3 times/week)": 1.375,
+            "Moderate (exercise 4–5 times/week)": 1.55,
+            "Active (daily exercise or intense exercise 3–4 times/week)": 1.725,
+            "Very Active (intense exercise 6–7 times/week)": 1.9,
+            "Extra Active (very intense exercise daily or physical job)": 1.95
+        }
+        
+        selected_activity_label = st.selectbox("Activity Level", list(activity_options.keys()), index=2, key="calc_activity")
+        activity_multiplier = activity_options[selected_activity_label]
+
+        goal = st.selectbox("Primary Goal", ["Lose Weight", "Maintain Weight", "Gain Muscle"], key="calc_goal")
+        fitness_goal_protein = st.radio("Fitness Goal for Protein", ["General Health", "Muscle Building"], horizontal=True, key="calc_protein_goal")
+
+    # 2. Calorie Calculation Logic (Mifflin-St Jeor)
+    if gender == "Male":
+        bmr = (10 * weight_kg) + (6.25 * height_cm) - (5 * age) + 5
+    else:
+        bmr = (10 * weight_kg) + (6.25 * height_cm) - (5 * age) - 161
+
+    tdee = bmr * activity_multiplier
+
+    caution_note = None
+    if goal == "Lose Weight":
+        goal_calories = tdee - 500
+        explanation_line = "Mild deficit (~500 kcal/day) targeted to safely lose approx 1 lb (0.45 kg) per week."
+        if gender == "Female" and goal_calories < 1200:
+            caution_note = "⚠️ Note: Resulting intake is below 1,200 kcal/day (recommended minimum for women per Harvard Health). Consider a smaller deficit."
+        elif gender == "Male" and goal_calories < 1500:
+            caution_note = "⚠️ Note: Resulting intake is below 1,500 kcal/day (recommended minimum for men per Harvard Health). Consider a smaller deficit."
+    elif goal == "Maintain Weight":
+        goal_calories = tdee
+        explanation_line = "Maintenance intake equals your Total Daily Energy Expenditure (TDEE) to sustain current weight."
+    else:  # Gain Muscle
+        goal_calories = tdee + 400
+        explanation_line = "Moderate surplus (+400 kcal/day) to support muscle building while minimizing excess fat storage."
+
+    # 3. Protein Calculation Logic
+    if fitness_goal_protein == "General Health":
+        protein_min = 0.8 * weight_kg
+        protein_max = 1.0 * weight_kg
+        protein_target = 0.9 * weight_kg
+    else:  # Muscle Building
+        protein_min = 1.6 * weight_kg
+        protein_max = 2.2 * weight_kg
+        protein_target = 1.8 * weight_kg
+
+    # Render Calorie & Protein Results Cards
+    st.markdown("<h3 style='color: #E6E6E6 !important; margin-top: 25px; margin-bottom: 15px;'>🎯 YOUR CALORIE & PROTEIN TARGETS</h3>", unsafe_allow_html=True)
+    
+    st.markdown(f"""
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 15px;">
+        <div style="background-color: #2C2F33; border: 1px solid #4A4F55; padding: 18px; border-radius: 12px; text-align: center;">
+            <span style="font-size: 11px; color: #A0A4A8; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">BMR (Basal Rate)</span>
+            <div style="font-size: 1.6rem; font-weight: bold; color: #E6E6E6; margin-top: 6px;">{int(round(bmr))} <span style="font-size: 1rem; color: #A0A4A8;">kcal</span></div>
+        </div>
+        <div style="background-color: #2C2F33; border: 1px solid #4A4F55; padding: 18px; border-radius: 12px; text-align: center;">
+            <span style="font-size: 11px; color: #A0A4A8; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Maintenance (TDEE)</span>
+            <div style="font-size: 1.6rem; font-weight: bold; color: #E6E6E6; margin-top: 6px;">{int(round(tdee))} <span style="font-size: 1rem; color: #A0A4A8;">kcal</span></div>
+        </div>
+        <div style="background-color: #2C2F33; border: 1px solid #B5FF00; padding: 18px; border-radius: 12px; text-align: center; box-shadow: 0 4px 15px rgba(181, 255, 0, 0.1);">
+            <span style="font-size: 11px; color: #B5FF00; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Goal Calorie Target</span>
+            <div style="font-size: 1.6rem; font-weight: bold; color: #B5FF00; margin-top: 6px;">{int(round(goal_calories))} <span style="font-size: 1rem; color: #E6E6E6;">kcal/day</span></div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown(f"""
+    <div style="background-color: #2C2F33; border: 1px solid #4A4F55; padding: 14px 18px; border-radius: 10px; margin-top: 10px; margin-bottom: 15px;">
+        <span style="color: #E6E6E6; font-size: 14px;">💡 <strong>Explanation</strong>: {explanation_line}</span>
+    </div>
+    """, unsafe_allow_html=True)
+
+    if caution_note:
+        st.warning(caution_note)
+
+    # Protein Card Banner
+    st.markdown(f"""
+    <div style="background-color: #3A3F44; border: 1px solid #4A4F55; padding: 20px; border-radius: 12px; margin-top: 15px; margin-bottom: 25px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+            <div>
+                <span style="font-size: 12px; color: #A0A4A8; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Recommended Daily Protein Range</span>
+                <h3 style="color: #E6E6E6 !important; margin: 4px 0 0 0; font-size: 1.3rem;">
+                    You need approximately <span style="color: #A0A4A8; font-weight: 600;">{int(round(protein_min))}g – {int(round(protein_max))}g</span> per day
+                </h3>
+            </div>
+            <div style="background-color: #2C2F33; border: 1px solid #B5FF00; padding: 10px 18px; border-radius: 8px; margin-top: 8px; box-shadow: 0 4px 15px rgba(181, 255, 0, 0.08);">
+                <span style="font-size: 11px; color: #B5FF00; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Optimal Target</span>
+                <div style="font-size: 1.25rem; font-weight: bold; color: #B5FF00;">~{int(round(protein_target))}g / day</div>
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # 4. Protein Sources Reference
+    st.markdown("<h3 style='color: #E6E6E6 !important; margin-top: 30px; margin-bottom: 15px;'>🥗 PROTEIN SOURCES REFERENCE</h3>", unsafe_allow_html=True)
+    
+    diet_preference = st.selectbox("Choose your diet type", ["Vegetarian", "Non-Vegetarian"], key="calc_diet_pref")
+
+    protein_data = load_protein_sources()
+    veg_sources = protein_data.get("vegetarian", [])
+    nonveg_sources = protein_data.get("non_vegetarian", [])
+
+    if diet_preference == "Vegetarian":
+        selected_sources = veg_sources
+        header_title = "🥦 Vegetarian Sources"
+    else:
+        selected_sources = nonveg_sources
+        header_title = "🍗 Non-Vegetarian Sources"
+
+    st.markdown(f"""
+    <div style="background-color: #3A3F44; border: 1px solid #B5FF00; border-radius: 12px; padding: 18px; margin-top: 10px; margin-bottom: 15px;">
+        <h4 style="color: #E6E6E6 !important; font-size: 16px; margin: 0;">{header_title} <span style='font-size: 11px; background-color: #B5FF00; color: #2C2F33; padding: 2px 8px; border-radius: 10px; font-weight: bold;'>YOUR PREFERENCE</span></h4>
+    </div>
+    """, unsafe_allow_html=True)
+
+    for item in selected_sources:
+        st.markdown(f"""
+        <div style="background-color: #2C2F33; border: 1px solid #4A4F55; padding: 10px 14px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <strong style="color: #E6E6E6; font-size: 14px;">{item['food']}</strong>
+                <div style="color: #A0A4A8; font-size: 12px;">Serving: {item['serving']}</div>
+            </div>
+            <div style="background-color: #3A3F44; color: #B5FF00; font-weight: bold; padding: 4px 10px; border-radius: 6px; font-size: 13px;">
+                {item['protein_g']}g protein
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    # 5. AI-Generated Meal Plan Section
+    st.markdown("<h3 style='color: #E6E6E6 !important; margin-top: 30px; margin-bottom: 15px;'>🤖 AI-GENERATED MEAL PLAN</h3>", unsafe_allow_html=True)
+    
+    if not groq_api_key:
+        st.error("🔑 **Groq API Key Missing!** Please configure `GROQ_API_KEY` inside `.streamlit/secrets.toml` to generate an AI meal plan.")
+    else:
+        protein_context_str = ", ".join([f"{item['food']} ({item['protein_g']}g protein / {item['serving']})" for item in selected_sources])
+        
+        meal_plan_cache_key = f"meal_plan_{goal}_{int(round(goal_calories))}_{int(round(protein_target))}_{diet_preference}"
+        
+        if st.button("✨ Generate My Meal Plan", key="generate_meal_plan_btn"):
+            with st.spinner("AI Coach crafting your 1-day sample meal plan..."):
+                plan_raw = generate_meal_plan(
+                    goal=goal,
+                    calorie_target=int(round(goal_calories)),
+                    protein_target=int(round(protein_target)),
+                    diet_pref=diet_preference,
+                    protein_sources_context=protein_context_str,
+                    api_key=groq_api_key
+                )
+                st.session_state[meal_plan_cache_key] = plan_raw
+
+        if meal_plan_cache_key in st.session_state:
+            plan_text = st.session_state[meal_plan_cache_key]
+            
+            breakfast, lunch, snacks, dinner, summary_text, disclaimer_text = parse_meal_plan_response(plan_text)
+            
+            st.markdown(f"""
+            <div style="background-color: #3A3F44; border: 1px solid #4A4F55; border-radius: 14px; padding: 24px; margin-top: 15px; margin-bottom: 20px;">
+                <h3 style="color: #B5FF00 !important; margin-bottom: 15px; font-size: 20px;">📋 Sample 1-Day Meal Plan ({diet_preference})</h3>
+            """, unsafe_allow_html=True)
+
+            meals_data = [
+                ("🌅 Breakfast", breakfast),
+                ("☀️ Lunch", lunch),
+                ("🍎 Snacks", snacks),
+                ("🌙 Dinner", dinner)
+            ]
+
+            col_m1, col_m2 = st.columns(2, gap="medium")
+            for idx, (meal_title, meal_items) in enumerate(meals_data):
+                target_col = col_m1 if idx % 2 == 0 else col_m2
+                with target_col:
+                    st.markdown(f"""
+                    <div style="background-color: #2C2F33; border: 1px solid #4A4F55; padding: 14px; border-radius: 10px; margin-bottom: 15px;">
+                        <h4 style="color: #B5FF00 !important; font-size: 15px; margin-bottom: 8px;">{meal_title}</h4>
+                    """, unsafe_allow_html=True)
+                    if meal_items:
+                        for item in meal_items:
+                            st.write(f"• {item}")
+                    else:
+                        st.write("• Balanced serving according to calorie/protein target.")
+                    st.markdown("</div>", unsafe_allow_html=True)
+
+            if summary_text:
+                st.markdown(f"""
+                <div style="background-color: #2C2F33; border: 1px solid #B5FF00; padding: 14px; border-radius: 10px; margin-top: 10px; margin-bottom: 15px;">
+                    <span style="color: #B5FF00; font-weight: bold;">📊 Daily Summary:</span>
+                    <p style="color: #E6E6E6; margin: 4px 0 0 0; font-size: 14px;">{summary_text}</p>
+                </div>
+                """, unsafe_allow_html=True)
+
+            if disclaimer_text:
+                st.caption(f"⚕️ Note: {disclaimer_text}")
+
+            st.markdown("</div>", unsafe_allow_html=True)
+
+            st.download_button(
+                label="📥 Download Meal Plan (.txt)",
+                data=plan_text,
+                file_name=f"meal_plan_{diet_preference.lower()}_{int(round(goal_calories))}kcal.txt",
+                mime="text/plain",
+                key="download_meal_plan_btn"
+            )
+

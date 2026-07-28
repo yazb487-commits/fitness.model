@@ -7,7 +7,8 @@
       "Push back up to the starting position."
     ],
     "video_id": "IODxDxX7oi4",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/3/33/Civilian_push-up.jpg"
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/3/33/Civilian_push-up.jpg",
+    "gif_url": ""
   },
   "Squats": {
     "steps": [
@@ -17,7 +18,8 @@
       "Lower until thighs are parallel to the floor, then push back up."
     ],
     "video_id": "aclHkVaku9U",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/d/df/Bodyweight_Squats.gif"
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/d/df/Bodyweight_Squats.gif",
+    "gif_url": ""
   },
   "Pull-Ups": {
     "steps": [
@@ -27,7 +29,8 @@
       "Slowly lower back to a dead hang."
     ],
     "video_id": "eGo4IYRupO0",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/6/67/Marine_Pull-ups.jpg"
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/6/67/Marine_Pull-ups.jpg",
+    "gif_url": ""
   },
   "Incline Push-Ups": {
     "steps": [
@@ -36,7 +39,8 @@
       "Lower your chest toward the platform, then push back up to lock out."
     ],
     "video_id": "Z0bRiVHNj8o",
-    "image_url": ""
+    "image_url": "",
+    "gif_url": ""
   },
   "Dips": {
     "steps": [
@@ -45,7 +49,8 @@
       "Push up through your palms to return to starting position."
     ],
     "video_id": "2z8JmcrW-As",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/5/59/Dipexercise.svg"
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/5/59/Dipexercise.svg",
+    "gif_url": ""
   },
   "Superman Hold": {
     "steps": [
@@ -55,7 +60,8 @@
       "Hold for the target duration."
     ],
     "video_id": "z6PJMT2y8GQ",
-    "image_url": ""
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Superman_exercise,_isometric_back_hyperextension_(cropped).png",
+    "gif_url": ""
   },
   "Bent-over Rows": {
     "steps": [
@@ -65,7 +71,8 @@
       "Lower with control."
     ],
     "video_id": "6g85eC0r074",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/c/cf/Bent-over-row.gif"
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/c/cf/Bent-over-row.gif",
+    "gif_url": ""
   },
   "Lunges": {
     "steps": [
@@ -75,7 +82,8 @@
       "Push off your front foot to return to start."
     ],
     "video_id": "QOVaHwlFnkA",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/a/a8/Lunge.gif"
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/a/a8/Lunge.gif",
+    "gif_url": ""
   },
   "Calf Raises": {
     "steps": [
@@ -84,7 +92,8 @@
       "Pause at the top, then slowly lower your heels back to the ground."
     ],
     "video_id": "gwLzBJYoWlU",
-    "image_url": ""
+    "image_url": "",
+    "gif_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Standing-calf-raises-1.gif"
   },
   "Plank": {
     "steps": [
@@ -94,7 +103,8 @@
       "Hold the position while breathing steadily."
     ],
     "video_id": "B296mUtAcrQ",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/e/ee/Plank.jpg"
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/e/ee/Plank.jpg",
+    "gif_url": ""
   },
   "Russian Twists": {
     "steps": [
@@ -103,7 +113,8 @@
       "Elevate feet slightly or keep them flat as you twist your torso side to side."
     ],
     "video_id": "wkD8rjkodUI",
-    "image_url": ""
+    "image_url": "",
+    "gif_url": ""
   },
   "Leg Raises": {
     "steps": [
@@ -112,7 +123,8 @@
       "Lower legs back down slowly, keeping core engaged and lower back pressed down."
     ],
     "video_id": "JB2oyDdUjCo",
-    "image_url": ""
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Leg-raises-1.png",
+    "gif_url": ""
   },
   "Pike Push-Ups": {
     "steps": [
@@ -121,7 +133,8 @@
       "Push back up until arms are fully straight."
     ],
     "video_id": "sposDXSUB0A",
-    "image_url": ""
+    "image_url": "",
+    "gif_url": ""
   },
   "Arm Circles": {
     "steps": [
@@ -130,7 +143,8 @@
       "Reverse directions after the target duration."
     ],
     "video_id": "140Oepv50y4",
-    "image_url": ""
+    "image_url": "",
+    "gif_url": ""
   },
   "Lateral Raises": {
     "steps": [
@@ -139,7 +153,8 @@
       "Lower with control."
     ],
     "video_id": "3VcKaXtoudU",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/0/07/Lateral-raise.gif"
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/0/07/Lateral-raise.gif",
+    "gif_url": ""
   },
   "Burpees": {
     "steps": [
@@ -148,7 +163,8 @@
       "Jump up explosively with arms overhead."
     ],
     "video_id": "qLBt2g-6gB0",
-    "image_url": ""
+    "image_url": "",
+    "gif_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Burpee.gif"
   },
   "Mountain Climbers": {
     "steps": [
@@ -157,7 +173,8 @@
       "Alternate legs rapidly in a running motion."
     ],
     "video_id": "cnyTQDSE884",
-    "image_url": ""
+    "image_url": "",
+    "gif_url": ""
   },
   "Jumping Jacks": {
     "steps": [
@@ -166,7 +183,8 @@
       "Jump back to the start position."
     ],
     "video_id": "nGaXj3kkmU4",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/a/a4/Jumping_jack.gif"
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/a/a4/Jumping_jack.gif",
+    "gif_url": ""
   },
   "Cat-Cow Stretch": {
     "steps": [
@@ -175,7 +193,8 @@
       "Exhale, round your spine toward the ceiling, tucking your chin (Cat)."
     ],
     "video_id": "KQCOAkHmVXc",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/b/be/Yoga_at_Your_Park_-_Bitilasana.jpg"
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/b/be/Yoga_at_Your_Park_-_Bitilasana.jpg",
+    "gif_url": ""
   },
   "Child's Pose": {
     "steps": [
@@ -183,7 +202,8 @@
       "Extend arms out in front on the floor and rest your forehead on the ground."
     ],
     "video_id": "2K-yZg596tY",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/0/0b/Balasana.JPG"
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/0/0b/Balasana.JPG",
+    "gif_url": ""
   },
   "Pelvic Tilts": {
     "steps": [
@@ -192,7 +212,8 @@
       "Hold for 5 seconds, then release."
     ],
     "video_id": "8l_E0aFwL3s",
-    "image_url": ""
+    "image_url": "",
+    "gif_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Pelvic_tilt-CDC_strength_training_for_older_adults.gif"
   },
   "Straight Leg Raises": {
     "steps": [
@@ -201,7 +222,8 @@
       "Hold briefly and lower with control."
     ],
     "video_id": "uY4rF-03q38",
-    "image_url": ""
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Exercise_Straight_Leg_Raises.png",
+    "gif_url": ""
   },
   "Partial Wall Sits": {
     "steps": [
@@ -210,7 +232,8 @@
       "Hold for 10-20 seconds, then slide back up."
     ],
     "video_id": "y-wV4VFl56M",
-    "image_url": ""
+    "image_url": "",
+    "gif_url": ""
   },
   "Hamstring Stretch": {
     "steps": [
@@ -219,7 +242,8 @@
       "Hold the stretch without bouncing."
     ],
     "video_id": "nL0eZleV08M",
-    "image_url": ""
+    "image_url": "",
+    "gif_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Hamstring_stretch-CDC_strength_training_for_older_adults.gif"
   },
   "Wall Slides": {
     "steps": [
@@ -228,7 +252,8 @@
       "Slide back down to elbow height."
     ],
     "video_id": "spS_5qQ10kU",
-    "image_url": ""
+    "image_url": "",
+    "gif_url": ""
   },
   "Doorway Chest Stretch": {
     "steps": [
@@ -237,7 +262,8 @@
       "Hold for 20-30 seconds."
     ],
     "video_id": "3a8XzM_G2S4",
-    "image_url": ""
+    "image_url": "",
+    "gif_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Chest_stretch-CDC_strength_training_for_older_adults.gif"
   },
   "Neck Tilts": {
     "steps": [
@@ -246,7 +272,8 @@
       "Hold and switch sides."
     ],
     "video_id": "HnCg3rYhNrs",
-    "image_url": ""
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Exercise_Neck_Bends.png",
+    "gif_url": ""
   },
   "Chin Tucks": {
     "steps": [
@@ -255,7 +282,8 @@
       "Hold for 5 seconds and release."
     ],
     "video_id": "g1_jK4kSjoc",
-    "image_url": ""
+    "image_url": "",
+    "gif_url": ""
   },
   "Shoulder Rolls": {
     "steps": [
@@ -264,7 +292,8 @@
       "Repeat forwards and backwards."
     ],
     "video_id": "c5p1p8q16gY",
-    "image_url": ""
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Forward_shoulder_roll.JPG",
+    "gif_url": ""
   },
   "Ankle Circles": {
     "steps": [
@@ -273,7 +302,8 @@
       "Repeat in opposite direction and switch feet."
     ],
     "video_id": "Hn_fK6kLSub",
-    "image_url": ""
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Ankle_circles_2.svg",
+    "gif_url": ""
   },
   "Calf Stretch": {
     "steps": [
@@ -282,7 +312,8 @@
       "Lean forward to feel stretch in lower leg."
     ],
     "video_id": "MDj8uDmgKro",
-    "image_url": ""
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Isometric_calf_stretch.png",
+    "gif_url": ""
   },
   "Toe Raises": {
     "steps": [
@@ -291,6 +322,7 @@
       "Lower back down."
     ],
     "video_id": "Zc0cE3_wRco",
-    "image_url": ""
+    "image_url": "",
+    "gif_url": ""
   }
 }

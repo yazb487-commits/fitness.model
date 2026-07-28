@@ -1,0 +1,28 @@
+{
+  "vegetarian": [
+    {"food": "Paneer", "serving": "100g", "protein_g": 18},
+    {"food": "Moong Dal", "serving": "1 cup cooked", "protein_g": 14},
+    {"food": "Toor Dal (Arhar)", "serving": "1 cup cooked", "protein_g": 15},
+    {"food": "Chana Dal", "serving": "1 cup cooked", "protein_g": 17},
+    {"food": "Rajma (Kidney Beans)", "serving": "1 cup cooked", "protein_g": 15},
+    {"food": "Chickpeas (Chole)", "serving": "1 cup cooked", "protein_g": 15},
+    {"food": "Sprouted Moong", "serving": "1 cup", "protein_g": 7},
+    {"food": "Soya Chunks", "serving": "100g", "protein_g": 52},
+    {"food": "Tofu", "serving": "100g", "protein_g": 8},
+    {"food": "Curd (Dahi)", "serving": "1 cup", "protein_g": 11},
+    {"food": "Milk", "serving": "1 cup", "protein_g": 8},
+    {"food": "Peanuts", "serving": "1 oz (28g)", "protein_g": 7},
+    {"food": "Almonds", "serving": "1 oz (28g)", "protein_g": 6},
+    {"food": "Whey Protein", "serving": "1 scoop", "protein_g": 24}
+  ],
+  "non_vegetarian": [
+    {"food": "Chicken Breast", "serving": "100g cooked", "protein_g": 31},
+    {"food": "Eggs", "serving": "1 large", "protein_g": 6},
+    {"food": "Rohu Fish", "serving": "100g cooked", "protein_g": 20},
+    {"food": "Pomfret Fish", "serving": "100g cooked", "protein_g": 22},
+    {"food": "Prawns", "serving": "100g cooked", "protein_g": 24},
+    {"food": "Mutton", "serving": "100g cooked", "protein_g": 25},
+    {"food": "Egg Whites", "serving": "2 large", "protein_g": 7},
+    {"food": "Turkey Breast", "serving": "100g cooked", "protein_g": 29}
+  ]
+}
