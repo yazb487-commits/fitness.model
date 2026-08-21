@@ -1,8 +1,10 @@
-opencv-python-headless
 streamlit
+Pillow
+numpy
+pandas
 opencv-python-headless
 tf-keras
 tensorflow
-streamlit
-numpy
-Pillow
+langchain-groq
+langchain-core
+groq
